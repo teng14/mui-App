@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/iconfont.css" rel="stylesheet"/>
+    <style type="text/css">
+    	body{
+    		background-color: #fafafa;
+    	}
+    	.mui-bar-nav{
+    		background-color: #f15a5a;
+    		
+    	}
+    	.mui-bar .mui-title{
+    		color: #fff;
+    	}
+    	.mui-bar-tab .mui-tab-item.mui-active{
+    		color: #f04848;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <h1 id="navTitle" class="mui-title">值得买</h1>
+	</header>
+	
+	<nav class="mui-bar mui-bar-tab">
+	    <a class="mui-tab-item mui-active" href="html/home.html">
+	        <span class="mui-icon iconfont icon-xiaoliantubiao01"></span>
+	        <span class="mui-tab-label">值得买</span>
+	    </a>
+	    <a class="mui-tab-item" href="html/find.html">
+	        <span class="mui-icon iconfont icon-faxiantubiao01"></span>
+	        <span class="mui-tab-label">发现</span>
+	    </a>
+	    <a class="mui-tab-item" href="html/nice.html">
+	        <span class="mui-icon iconfont icon-gouwudai"></span>
+	        <span class="mui-tab-label">好物</span>
+	    </a>
+	    <a class="mui-tab-item" href="html/my.html">
+	        <span class="mui-icon iconfont icon-gerenzhongxintubiao01"></span>
+	        <span class="mui-tab-label">我的</span>
+	    </a>
+	</nav>
+	
+	
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		mui.init();
+		var navTitle; //头部标题
+		var mainWebView; //当前主webview
+		var curTabItem; //当前被选中tabitem
+		//bar切换URL地址
+		var barItemUrl = ['html/home.html', 'html/find.html', 'html/nice.html', 'html/my.html']
+		var barWebView = {};
+		
+		
+		mui.plusReady(function(){
+			plus.navigator.setStatusBarBackground('#f15a5a');
+			navTitle = document.getElementById('navTitle');
+			mainWebView = plus.webview.currentWebview();
+			initBarItemView();
+			addEventForTabItem();
+		})
+		
+		//初始化barItem 页面
+		function initBarItemView(){
+			for(var i=0; i<barItemUrl.length; i++){
+				barWebView[i] = mui.preload({
+					url: barItemUrl[i],
+					id: barItemUrl[i],
+					styles: {
+						top: '44px',
+						bottom: '51px',
+						left: '0px',
+						bounce: 'vertical',
+						bounceBackground: '#fafafa'
+					},
+					waiting: {
+		   				autoShow: false
+		   			}
+				});
+				barWebView[i].hide();
+				mainWebView.append(barWebView[i])
+			};
+			barWebView[0].show();
+		};
+		
+		function addEventForTabItem(){
+			mui('.mui-bar-tab').on('tap', '.mui-tab-item', function(){
+				var tabItem = this;
+				if(curTabItem == tabItem){
+					return;
+				};
+				curTabItem = tabItem;
+				navTitle.innerText = tabItem.children[tabItem.children.length-1].innerText;
+				showCurWebView(tabItem.getAttribute('href'));
+			})
+			
+		}
+		
+		function showCurWebView(href) {
+			var index = 0;
+			for (var i = 0; i < barItemUrl.length; i++) {
+				if (href == barItemUrl[i]) {
+					index = i;
+				} else {
+					barWebView[i].hide();
+				}
+			}
+			barWebView[index].show();
+		}
+	
+	
+	  	
+	</script>
+</body>
+</html>
